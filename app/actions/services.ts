@@ -83,10 +83,21 @@ export async function createServiceOrGetExisting(
     throw new Error("Название сервиса не может быть пустым");
   }
 
-  // Сначала проверяем, существует ли сервис с таким названием
+  // Получаем текущего пользователя
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Пользователь не авторизован");
+  }
+
+  // Проверяем, существует ли сервис с таким названием
+  // Проверяем общие сервисы (user_id IS NULL) или сервисы текущего пользователя
+  // RLS политика автоматически отфильтрует сервисы других пользователей
   const { data: existing, error: checkError } = await supabase
     .from("services_catalog")
-    .select("id")
+    .select("id, user_id")
     .eq("name", trimmedName)
     .maybeSingle();
 
@@ -100,7 +111,7 @@ export async function createServiceOrGetExisting(
     return existing.id;
   }
 
-  // Если не существует, создаем новый
+  // Если не существует, создаем новый сервис для текущего пользователя
   const { data, error } = await supabase
     .from("services_catalog")
     .insert({
@@ -108,6 +119,7 @@ export async function createServiceOrGetExisting(
       default_currency: defaultCurrency,
       logo_url: null,
       brand_color: null,
+      user_id: user.id, // Привязываем сервис к пользователю
     })
     .select("id")
     .single();

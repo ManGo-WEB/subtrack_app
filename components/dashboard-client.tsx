@@ -18,6 +18,7 @@ import { calculateMonthlyTotal, calculateMonthlyOnlyTotal } from "@/lib/utils/to
 import type { Subscription, SubscriptionWithService } from "@/types/subscription";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { translateError } from "@/lib/utils/error-translations";
 
 interface DashboardClientProps {
   subscriptions: SubscriptionWithService[];
@@ -79,11 +80,10 @@ export function DashboardClient({
       
       router.refresh();
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Не удалось создать подписку"
-      );
+      const rawError = error instanceof Error
+        ? error.message
+        : "Не удалось создать подписку";
+      toast.error(translateError(rawError));
     } finally {
       setIsLoading(false);
     }
@@ -125,11 +125,10 @@ export function DashboardClient({
       
       router.refresh();
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Не удалось обновить подписку"
-      );
+      const rawError = error instanceof Error
+        ? error.message
+        : "Не удалось обновить подписку";
+      toast.error(translateError(rawError));
     } finally {
       setIsLoading(false);
     }
@@ -159,11 +158,10 @@ export function DashboardClient({
       
       router.refresh();
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Не удалось удалить подписку"
-      );
+      const rawError = error instanceof Error
+        ? error.message
+        : "Не удалось удалить подписку";
+      toast.error(translateError(rawError));
       throw error;
     }
   };

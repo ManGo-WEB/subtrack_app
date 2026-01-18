@@ -88,4 +88,22 @@
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
   }
+
+  /* Улучшение скролла на мобильных устройствах */
+  .-webkit-overflow-scrolling-touch {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .touch-pan-y {
+    touch-action: pan-y;
+  }
+
+  .overscroll-contain {
+    overscroll-behavior: contain;
+  }
+
+  /* Скрытие индикатора разработки Next.js */
+  [data-nextjs-toast] {
+    display: none !important;
+  }
 }

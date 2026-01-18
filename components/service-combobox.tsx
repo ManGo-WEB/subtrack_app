@@ -58,6 +58,17 @@ export function ServiceCombobox({
     }
   };
 
+  // Обработчик для предотвращения скролла страницы при скролле внутри списка
+  const handleScrollContainerTouchStart = (e: React.TouchEvent) => {
+    // Предотвращаем всплытие события, чтобы не скроллилась страница
+    e.stopPropagation();
+  };
+
+  const handleScrollContainerTouchMove = (e: React.TouchEvent) => {
+    // Предотвращаем всплытие события, чтобы не скроллилась страница
+    e.stopPropagation();
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -89,7 +100,16 @@ export function ServiceCombobox({
               className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
-          <div className="max-h-[300px] overflow-y-auto p-1">
+          <div 
+            className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain',
+              touchAction: 'pan-y',
+            }}
+            onTouchStart={handleScrollContainerTouchStart}
+            onTouchMove={handleScrollContainerTouchMove}
+          >
             {filteredServices.length === 0 ? (
               <div className="py-6 text-center text-sm text-muted-foreground">
                 {searchQuery ? (
