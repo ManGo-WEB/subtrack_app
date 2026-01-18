@@ -41,12 +41,15 @@ export function getNextPaymentDate(
   }
 
   const start = typeof startDate === "string" ? new Date(startDate) : startDate;
+  const startNormalized = new Date(start);
+  startNormalized.setHours(0, 0, 0, 0);
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   // Если дата старта в будущем, то это и есть дата платежа
-  if (isAfter(start, today)) {
-    return start;
+  if (isAfter(startNormalized, today)) {
+    return startNormalized;
   }
 
   const duration = periodToDuration(period);
@@ -55,8 +58,10 @@ export function getNextPaymentDate(
   }
 
   // Накатываем интервалы, пока дата не станет больше сегодняшней
-  let nextDate = new Date(start);
+  // Для сегодняшней даты сразу добавляем один период
+  let nextDate = new Date(startNormalized);
   
+  // Если дата начала меньше или равна сегодня, добавляем период минимум один раз
   while (nextDate <= today) {
     nextDate = add(nextDate, duration);
   }

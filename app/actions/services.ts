@@ -65,3 +65,63 @@ export async function getServiceById(
 
   return data as ServiceCatalog;
 }
+
+/**
+ * Создать новый сервис в каталоге или вернуть существующий
+ * @param name - Название сервиса
+ * @param defaultCurrency - Валюта по умолчанию
+ * @returns ID созданного или существующего сервиса
+ */
+export async function createServiceOrGetExisting(
+  name: string,
+  defaultCurrency: "RUB" | "USD" | "EUR" = "RUB"
+): Promise<number> {
+  const supabase = await createClient();
+
+  const trimmedName = name.trim();
+  if (!trimmedName) {
+    throw new Error("Название сервиса не может быть пустым");
+  }
+
+  // Сначала проверяем, существует ли сервис с таким названием
+  const { data: existing, error: checkError } = await supabase
+    .from("services_catalog")
+    .select("id")
+    .eq("name", trimmedName)
+    .maybeSingle();
+
+  if (checkError) {
+    console.error("[createServiceOrGetExisting] Ошибка проверки существования сервиса:", checkError);
+    throw new Error(`Ошибка при проверке существования сервиса: ${checkError.message}`);
+  }
+
+  if (existing && existing.id) {
+    console.log(`[createServiceOrGetExisting] Найден существующий сервис "${trimmedName}" с ID: ${existing.id}`);
+    return existing.id;
+  }
+
+  // Если не существует, создаем новый
+  const { data, error } = await supabase
+    .from("services_catalog")
+    .insert({
+      name: trimmedName,
+      default_currency: defaultCurrency,
+      logo_url: null,
+      brand_color: null,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("[createServiceOrGetExisting] Ошибка создания сервиса:", error);
+    throw new Error(`Не удалось создать сервис "${trimmedName}" в каталоге: ${error.message}`);
+  }
+
+  if (!data || !data.id) {
+    console.error("[createServiceOrGetExisting] Сервис создан, но ID не получен");
+    throw new Error(`Сервис "${trimmedName}" создан, но не удалось получить ID`);
+  }
+
+  console.log(`[createServiceOrGetExisting] Создан новый сервис "${trimmedName}" с ID: ${data.id}`);
+  return data.id;
+}

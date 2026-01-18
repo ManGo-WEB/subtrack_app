@@ -148,7 +148,9 @@ export function SubscriptionForm({
 
   const onSubmitForm = async (data: SubscriptionFormValues) => {
     await onSubmit(data);
+    // Перезагружаем список сервисов после создания подписки, чтобы обновить автокомплит
     if (!subscription) {
+      getAllServices().then(setServices);
       reset();
       setSelectedServiceId(null);
       setCustomServiceName("");

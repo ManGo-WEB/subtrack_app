@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { getNextPaymentDate } from "@/lib/utils/date";
+import { createServiceOrGetExisting } from "@/app/actions/services";
 import type {
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
@@ -125,11 +126,26 @@ export async function createSubscription(
     throw new Error("Пользователь не авторизован");
   }
 
+  // Если service_id не указан (null или undefined), но есть название, создаем или находим сервис в каталоге
+  let serviceId = input.service_id ?? null;
+  if ((serviceId === null || serviceId === undefined) && input.name && input.name.trim()) {
+    try {
+      serviceId = await createServiceOrGetExisting(input.name.trim(), input.currency);
+      console.log(`[createSubscription] Создан/найден сервис "${input.name.trim()}" с ID: ${serviceId}`);
+    } catch (error) {
+      console.error("[createSubscription] Ошибка создания сервиса:", error);
+      // Бросаем ошибку, чтобы пользователь знал о проблеме
+      throw new Error(
+        `Не удалось создать сервис "${input.name}" в каталоге. ${error instanceof Error ? error.message : "Неизвестная ошибка"}`
+      );
+    }
+  }
+
   const { data, error } = await supabase
     .from("subscriptions")
     .insert({
       user_id: user.id,
-      service_id: input.service_id || null,
+      service_id: serviceId || null,
       name: input.name,
       cost: input.cost,
       currency: input.currency,
