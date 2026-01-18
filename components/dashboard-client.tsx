@@ -14,7 +14,7 @@ import {
   getSubscriptions,
 } from "@/app/actions/subscriptions";
 import { getExchangeRates } from "@/app/actions/exchange-rates";
-import { calculateMonthlyTotal } from "@/lib/utils/totals";
+import { calculateMonthlyTotal, calculateMonthlyOnlyTotal } from "@/lib/utils/totals";
 import type { Subscription, SubscriptionWithService } from "@/types/subscription";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -22,14 +22,17 @@ import { toast } from "sonner";
 interface DashboardClientProps {
   subscriptions: SubscriptionWithService[];
   monthlyTotal: number;
+  monthlyOnlyTotal: number;
 }
 
 export function DashboardClient({
   subscriptions: initialSubscriptions,
   monthlyTotal: initialMonthlyTotal,
+  monthlyOnlyTotal: initialMonthlyOnlyTotal,
 }: DashboardClientProps) {
   const [subscriptions, setSubscriptions] = useState(initialSubscriptions);
   const [monthlyTotal, setMonthlyTotal] = useState(initialMonthlyTotal);
+  const [monthlyOnlyTotal, setMonthlyOnlyTotal] = useState(initialMonthlyOnlyTotal);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] =
     useState<Subscription | null>(null);
@@ -40,7 +43,8 @@ export function DashboardClient({
   useEffect(() => {
     setSubscriptions(initialSubscriptions);
     setMonthlyTotal(initialMonthlyTotal);
-  }, [initialSubscriptions, initialMonthlyTotal]);
+    setMonthlyOnlyTotal(initialMonthlyOnlyTotal);
+  }, [initialSubscriptions, initialMonthlyTotal, initialMonthlyOnlyTotal]);
 
   const handleCreate = async (data: {
     service_id: number | null;
@@ -56,7 +60,7 @@ export function DashboardClient({
       toast.success("Подписка успешно добавлена");
       setIsFormOpen(false);
       
-      // Обновляем список подписок и итоговую сумму
+      // Обновляем список подписок и итоговые суммы
       const [updatedSubscriptions, exchangeRates] = await Promise.all([
         getSubscriptions(),
         getExchangeRates(),
@@ -66,7 +70,12 @@ export function DashboardClient({
         updatedSubscriptions as Subscription[],
         exchangeRates
       );
+      const newMonthlyOnlyTotal = calculateMonthlyOnlyTotal(
+        updatedSubscriptions as Subscription[],
+        exchangeRates
+      );
       setMonthlyTotal(newTotal);
+      setMonthlyOnlyTotal(newMonthlyOnlyTotal);
       
       router.refresh();
     } catch (error) {
@@ -97,7 +106,7 @@ export function DashboardClient({
       setIsFormOpen(false);
       setEditingSubscription(null);
       
-      // Обновляем список подписок и итоговую сумму
+      // Обновляем список подписок и итоговые суммы
       const [updatedSubscriptions, exchangeRates] = await Promise.all([
         getSubscriptions(),
         getExchangeRates(),
@@ -107,7 +116,12 @@ export function DashboardClient({
         updatedSubscriptions as Subscription[],
         exchangeRates
       );
+      const newMonthlyOnlyTotal = calculateMonthlyOnlyTotal(
+        updatedSubscriptions as Subscription[],
+        exchangeRates
+      );
       setMonthlyTotal(newTotal);
+      setMonthlyOnlyTotal(newMonthlyOnlyTotal);
       
       router.refresh();
     } catch (error) {
@@ -126,7 +140,7 @@ export function DashboardClient({
       await deleteSubscription(id);
       toast.success("Подписка успешно удалена");
       
-      // Обновляем список подписок и итоговую сумму
+      // Обновляем список подписок и итоговые суммы
       const [updatedSubscriptions, exchangeRates] = await Promise.all([
         getSubscriptions(),
         getExchangeRates(),
@@ -136,7 +150,12 @@ export function DashboardClient({
         updatedSubscriptions as Subscription[],
         exchangeRates
       );
+      const newMonthlyOnlyTotal = calculateMonthlyOnlyTotal(
+        updatedSubscriptions as Subscription[],
+        exchangeRates
+      );
       setMonthlyTotal(newTotal);
+      setMonthlyOnlyTotal(newMonthlyOnlyTotal);
       
       router.refresh();
     } catch (error) {
@@ -174,7 +193,7 @@ export function DashboardClient({
         </Button>
       </div>
 
-      <MonthlyTotal total={monthlyTotal} isLoading={isLoading} />
+      <MonthlyTotal total={monthlyTotal} monthlyOnlyTotal={monthlyOnlyTotal} isLoading={isLoading} />
 
       {subscriptions.length === 0 ? (
         <div className="text-center py-16">

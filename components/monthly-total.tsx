@@ -6,10 +6,11 @@ import { formatCurrency } from "@/lib/utils/currency";
 
 interface MonthlyTotalProps {
   total: number | null;
+  monthlyOnlyTotal: number | null;
   isLoading?: boolean;
 }
 
-export function MonthlyTotal({ total, isLoading = false }: MonthlyTotalProps) {
+export function MonthlyTotal({ total, monthlyOnlyTotal, isLoading = false }: MonthlyTotalProps) {
   if (isLoading) {
     return (
       <Card>
@@ -36,12 +37,24 @@ export function MonthlyTotal({ total, isLoading = false }: MonthlyTotalProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 px-6 pb-6">
-        <div className="text-3xl font-semibold tracking-tight mb-1 text-primary">
-          {formatCurrency(total, "RUB", true)}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-8">
+          <div className="flex-1">
+            <div className="text-3xl font-semibold tracking-tight mb-1 text-primary">
+              {formatCurrency(total, "RUB", true)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Примерно, по курсу ЦБ РФ
+            </p>
+          </div>
+          <div className="flex-1 md:border-l md:pl-6 md:pt-0 pt-4 border-t md:border-t-0">
+            <div className="text-3xl font-semibold tracking-tight mb-1 text-primary">
+              {formatCurrency(monthlyOnlyTotal, "RUB", true)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Только месячные подписки
+            </p>
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Примерно, по курсу ЦБ РФ
-        </p>
       </CardContent>
     </Card>
   );

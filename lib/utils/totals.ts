@@ -62,3 +62,32 @@ export function calculateMonthlyTotal(
     return total + costInRUB;
   }, 0);
 }
+
+/**
+ * Рассчитывает итоговую сумму только по месячным подпискам в RUB
+ * Учитываются только подписки с периодом "monthly"
+ * 
+ * @param subscriptions - Массив подписок пользователя
+ * @param exchangeRates - Курсы валют для конвертации
+ * @returns Итоговая сумма в RUB
+ */
+export function calculateMonthlyOnlyTotal(
+  subscriptions: Subscription[],
+  exchangeRates: ExchangeRate[]
+): number {
+  return subscriptions.reduce((total, subscription) => {
+    // Учитываем только месячные подписки
+    if (subscription.period !== "monthly") {
+      return total;
+    }
+
+    // Конвертируем в RUB
+    const costInRUB = convertToRUB(
+      subscription.cost,
+      subscription.currency,
+      exchangeRates
+    );
+
+    return total + costInRUB;
+  }, 0);
+}
