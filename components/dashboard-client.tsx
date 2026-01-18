@@ -160,29 +160,34 @@ export function DashboardClient({
   };
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Мои подписки</h1>
-        <Button onClick={() => setIsFormOpen(true)}>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Подписки</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Управление вашими подписками
+          </p>
+        </div>
+        <Button onClick={() => setIsFormOpen(true)} size="sm">
           <Plus className="mr-2 h-4 w-4" />
-          Добавить подписку
+          Добавить
         </Button>
       </div>
 
       <MonthlyTotal total={monthlyTotal} isLoading={isLoading} />
 
       {subscriptions.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground text-lg mb-4">
+        <div className="text-center py-16">
+          <p className="text-muted-foreground text-sm mb-6">
             У вас пока нет подписок
           </p>
-          <Button onClick={() => setIsFormOpen(true)}>
+          <Button onClick={() => setIsFormOpen(true)} size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            Добавить первую подписку
+            Добавить подписку
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {subscriptions.map((subscription) => (
             <SubscriptionCard
               key={subscription.id}

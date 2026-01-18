@@ -29,15 +29,17 @@ export function MonthlyTotal({ total, isLoading = false }: MonthlyTotalProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Итого в месяц</CardTitle>
+    <Card className="border-0 shadow-sm bg-primary/10">
+      <CardHeader className="pb-3 pt-6 px-6">
+        <CardTitle className="text-sm font-medium text-foreground">
+          Итого в месяц
+        </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="text-3xl font-bold">
+      <CardContent className="pt-0 px-6 pb-6">
+        <div className="text-3xl font-semibold tracking-tight mb-1 text-primary">
           {formatCurrency(total, "RUB", true)}
         </div>
-        <p className="text-sm text-muted-foreground mt-2">
+        <p className="text-xs text-muted-foreground">
           Примерно, по курсу ЦБ РФ
         </p>
       </CardContent>

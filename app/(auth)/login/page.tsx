@@ -73,19 +73,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Вход в SubTrack</CardTitle>
-          <CardDescription>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/20">
+      <Card className="w-full max-w-md border-0 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl">Вход в SubTrack</CardTitle>
+          <CardDescription className="text-sm mt-1">
             Войдите, чтобы продолжить работу с трекером подписок
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Форма входа по email и паролю */}
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          <form onSubmit={handleEmailLogin} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -97,7 +97,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Пароль</Label>
+              <Label htmlFor="password" className="text-sm font-medium">Пароль</Label>
               <Input
                 id="password"
                 type="password"
@@ -128,9 +128,9 @@ export default function LoginPage() {
           </div>
 
           {/* Форма Magic Link */}
-          <form onSubmit={handleMagicLink} className="space-y-4">
+          <form onSubmit={handleMagicLink} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="magic-link-email">Вход по ссылке</Label>
+              <Label htmlFor="magic-link-email" className="text-sm font-medium">Вход по ссылке</Label>
               <Input
                 id="magic-link-email"
                 type="email"

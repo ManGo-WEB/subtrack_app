@@ -63,18 +63,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Регистрация в SubTrack</CardTitle>
-          <CardDescription>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-muted/20">
+      <Card className="w-full max-w-md border-0 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl">Регистрация в SubTrack</CardTitle>
+          <CardDescription className="text-sm mt-1">
             Создайте аккаунт для управления подписками
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleRegister} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -86,7 +86,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Пароль</Label>
+              <Label htmlFor="password" className="text-sm font-medium">Пароль</Label>
               <Input
                 id="password"
                 type="password"
@@ -98,7 +98,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Подтвердите пароль</Label>
+              <Label htmlFor="confirm-password" className="text-sm font-medium">Подтвердите пароль</Label>
               <Input
                 id="confirm-password"
                 type="password"

@@ -159,19 +159,19 @@ export function SubscriptionForm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-lg">
             {subscription ? "Редактировать подписку" : "Добавить подписку"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             {subscription
               ? "Измените данные подписки"
               : "Заполните информацию о вашей подписке"}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="service">Сервис</Label>
+            <Label htmlFor="service" className="text-sm font-medium">Сервис</Label>
             <ServiceCombobox
               services={services}
               value={selectedServiceId}
@@ -183,7 +183,7 @@ export function SubscriptionForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name">
+            <Label htmlFor="name" className="text-sm font-medium">
               Название <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -199,7 +199,7 @@ export function SubscriptionForm({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="cost">
+              <Label htmlFor="cost" className="text-sm font-medium">
                 Стоимость <span className="text-destructive">*</span>
               </Label>
               <Input
@@ -219,7 +219,7 @@ export function SubscriptionForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="currency">Валюта</Label>
+              <Label htmlFor="currency" className="text-sm font-medium">Валюта</Label>
               <Select
                 value={currency}
                 onValueChange={(value) =>
@@ -241,7 +241,7 @@ export function SubscriptionForm({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="period">Период</Label>
+              <Label htmlFor="period" className="text-sm font-medium">Период</Label>
               <Select
                 value={period}
                 onValueChange={(value) =>
@@ -263,7 +263,7 @@ export function SubscriptionForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="start_date">
+              <Label htmlFor="start_date" className="text-sm font-medium">
                 Дата начала <span className="text-destructive">*</span>
               </Label>
               <Input

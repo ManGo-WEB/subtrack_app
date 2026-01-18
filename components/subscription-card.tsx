@@ -75,15 +75,15 @@ export function SubscriptionCard({
     <>
       <Card
         className={cn(
-          "transition-all hover:shadow-md animate-fade-in",
-          isDateNear && "border-destructive/50 bg-destructive/5"
+          "transition-all duration-200 hover:shadow-md hover:border-border/80 hover:-translate-y-0.5 border shadow-sm animate-fade-in",
+          isDateNear && "border-l-4 border-l-destructive"
         )}
       >
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-semibold text-lg">{subscription.name}</h3>
-              <p className="text-sm text-muted-foreground">
+        <CardHeader className="pb-3 pt-6 px-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-base mb-1.5 truncate">{subscription.name}</h3>
+              <p className="text-lg font-medium">
                 {formatCurrency(
                   subscription.cost,
                   subscription.currency,
@@ -91,32 +91,34 @@ export function SubscriptionCard({
                 )}
               </p>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-0.5 shrink-0">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => onEdit(subscription)}
                 disabled={loading}
+                className="h-8 w-8"
               >
-                <Edit className="h-4 w-4" />
+                <Edit className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setDeleteDialogOpen(true)}
                 disabled={loading}
+                className="h-8 w-8 text-muted-foreground hover:text-destructive"
               >
-                <Trash2 className="h-4 w-4 text-destructive" />
+                <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4" />
+        <CardContent className="pt-0 px-6 pb-6">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Calendar className="h-3.5 w-3.5" />
             <span
               className={cn(
-                isDateNear && "font-semibold text-destructive"
+                isDateNear && "font-medium text-destructive"
               )}
             >
               След. списание: {formatNextPayment()}

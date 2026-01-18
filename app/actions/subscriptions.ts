@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { getNextPaymentDate } from "@/lib/utils/date";
 import type {
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
@@ -36,8 +37,7 @@ export async function getSubscriptions(): Promise<SubscriptionWithService[]> {
       )
     `)
     .eq("user_id", user.id)
-    .eq("active", true)
-    .order("created_at", { ascending: false });
+    .eq("active", true);
 
   if (error) {
     console.error("Ошибка получения подписок:", error);
@@ -46,7 +46,7 @@ export async function getSubscriptions(): Promise<SubscriptionWithService[]> {
 
   // Преобразуем данные Supabase в наш формат
   // Supabase возвращает services_catalog как массив при JOIN
-  return (data || []).map((item: any) => {
+  const subscriptions = (data || []).map((item: any) => {
     const service = Array.isArray(item.services_catalog) 
       ? (item.services_catalog[0] || null)
       : (item.services_catalog || null);
@@ -58,6 +58,24 @@ export async function getSubscriptions(): Promise<SubscriptionWithService[]> {
       service,
     };
   }) as SubscriptionWithService[];
+
+  // Сортируем по дате следующего платежа (по возрастанию)
+  // Подписки без даты (lifetime) идут в конец
+  subscriptions.sort((a, b) => {
+    const dateA = getNextPaymentDate(a.start_date, a.period);
+    const dateB = getNextPaymentDate(b.start_date, b.period);
+    
+    // Если обе даты null (бессрочные) - сохраняем порядок
+    if (!dateA && !dateB) return 0;
+    // Бессрочные в конец
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+    
+    // Сортируем по возрастанию даты
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  return subscriptions;
 }
 
 /**
