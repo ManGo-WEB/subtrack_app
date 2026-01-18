@@ -152,7 +152,7 @@ export async function createSubscription(
       period: input.period,
       start_date: input.start_date,
       active: input.active ?? true,
-    })
+    } as any) // Приведение типа для обхода проблемы с типизацией Supabase
     .select()
     .single();
 
@@ -196,6 +196,7 @@ export async function updateSubscription(
 
   const { data, error } = await supabase
     .from("subscriptions")
+    // @ts-expect-error - Проблема с типизацией Supabase, типы не обновлены после миграций
     .update(input)
     .eq("id", id)
     .select()
@@ -238,6 +239,7 @@ export async function deleteSubscription(id: string): Promise<void> {
 
   const { error } = await supabase
     .from("subscriptions")
+    // @ts-expect-error - Проблема с типизацией Supabase, типы не обновлены после миграций
     .update({ active: false })
     .eq("id", id);
 

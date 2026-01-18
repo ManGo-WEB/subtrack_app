@@ -21,12 +21,11 @@ export async function getExchangeRates(): Promise<ExchangeRate[]> {
     .order("updated_at", { ascending: false });
 
   // Если есть кэш и он свежий (менее 24 часов), возвращаем его
-  if (
-    cachedRates &&
-    cachedRates.length > 0 &&
-    !shouldUpdateExchangeRates(cachedRates[0]?.updated_at)
-  ) {
-    return cachedRates as ExchangeRate[];
+  if (cachedRates && cachedRates.length > 0) {
+    const firstRate = cachedRates[0] as ExchangeRate | null;
+    if (firstRate && !shouldUpdateExchangeRates(firstRate.updated_at)) {
+      return cachedRates as ExchangeRate[];
+    }
   }
 
   // Обновляем курсы от ЦБ РФ
@@ -40,10 +39,10 @@ export async function getExchangeRates(): Promise<ExchangeRate[]> {
         .from("exchange_rates")
         .upsert(
           {
-            currency_code: rate.currency_code,
+            currency_code: rate.currency_code as string,
             rate_to_rub: rate.rate_to_rub,
             updated_at: rate.updated_at,
-          },
+          } as any, // Приведение типа для обхода проблемы с типизацией Supabase
           {
             onConflict: "currency_code",
           }

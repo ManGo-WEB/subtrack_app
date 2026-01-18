@@ -25,11 +25,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Отключаем индикатор разработки Next.js
-  devIndicators: {
-    buildActivity: false,
-    buildActivityPosition: 'bottom-left',
-  },
 };
 
 export default nextConfig;

@@ -132,7 +132,7 @@ export function SubscriptionCard({
           <AlertDialogHeader>
             <AlertDialogTitle>Удалить подписку?</AlertDialogTitle>
             <AlertDialogDescription>
-              Вы уверены, что хотите удалить подписку "{subscription.name}"?
+              Вы уверены, что хотите удалить подписку &quot;{subscription.name}&quot;?
               Это действие нельзя отменить.
             </AlertDialogDescription>
           </AlertDialogHeader>

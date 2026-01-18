@@ -47,9 +47,9 @@ export function MonthlyTotal({ total, monthlyOnlyTotal, isLoading = false }: Mon
             </p>
           </div>
           <div className="flex-1 md:border-l md:pl-6 md:pt-0 pt-4 border-t md:border-t-0">
-            <div className="text-3xl font-semibold tracking-tight mb-1 text-primary">
-              {formatCurrency(monthlyOnlyTotal, "RUB", true)}
-            </div>
+              <div className="text-3xl font-semibold tracking-tight mb-1 text-primary">
+                {formatCurrency(monthlyOnlyTotal ?? 0, "RUB", true)}
+              </div>
             <p className="text-xs text-muted-foreground">
               Только месячные подписки
             </p>

@@ -15,7 +15,7 @@ import {
 } from "@/app/actions/subscriptions";
 import { getExchangeRates } from "@/app/actions/exchange-rates";
 import { calculateMonthlyTotal, calculateMonthlyOnlyTotal } from "@/lib/utils/totals";
-import type { Subscription, SubscriptionWithService } from "@/types/subscription";
+import type { Subscription, SubscriptionWithService, PeriodType } from "@/types/subscription";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { translateError } from "@/lib/utils/error-translations";
@@ -48,11 +48,11 @@ export function DashboardClient({
   }, [initialSubscriptions, initialMonthlyTotal, initialMonthlyOnlyTotal]);
 
   const handleCreate = async (data: {
-    service_id: number | null;
+    service_id?: number | null;
     name: string;
     cost: number;
     currency: "RUB" | "USD" | "EUR";
-    period: string;
+    period: PeriodType;
     start_date: string;
   }) => {
     setIsLoading(true);
@@ -90,11 +90,11 @@ export function DashboardClient({
   };
 
   const handleUpdate = async (data: {
-    service_id: number | null;
+    service_id?: number | null;
     name: string;
     cost: number;
     currency: "RUB" | "USD" | "EUR";
-    period: string;
+    period: PeriodType;
     start_date: string;
   }) => {
     if (!editingSubscription) return;

@@ -106,9 +106,12 @@ export async function createServiceOrGetExisting(
     throw new Error(`Ошибка при проверке существования сервиса: ${checkError.message}`);
   }
 
-  if (existing && existing.id) {
-    console.log(`[createServiceOrGetExisting] Найден существующий сервис "${trimmedName}" с ID: ${existing.id}`);
-    return existing.id;
+  if (existing) {
+    const existingService = existing as { id: number; user_id: string | null } | null;
+    if (existingService && existingService.id) {
+      console.log(`[createServiceOrGetExisting] Найден существующий сервис "${trimmedName}" с ID: ${existingService.id}`);
+      return existingService.id;
+    }
   }
 
   // Если не существует, создаем новый сервис для текущего пользователя
@@ -120,7 +123,7 @@ export async function createServiceOrGetExisting(
       logo_url: null,
       brand_color: null,
       user_id: user.id, // Привязываем сервис к пользователю
-    })
+    } as any) // Приведение типа для обхода проблемы с типизацией Supabase
     .select("id")
     .single();
 
@@ -129,11 +132,17 @@ export async function createServiceOrGetExisting(
     throw new Error(`Не удалось создать сервис "${trimmedName}" в каталоге: ${error.message}`);
   }
 
-  if (!data || !data.id) {
+  if (!data) {
+    console.error("[createServiceOrGetExisting] Сервис создан, но данные не получены");
+    throw new Error(`Сервис "${trimmedName}" создан, но не удалось получить ID`);
+  }
+
+  const createdService = data as { id: number } | null;
+  if (!createdService || !createdService.id) {
     console.error("[createServiceOrGetExisting] Сервис создан, но ID не получен");
     throw new Error(`Сервис "${trimmedName}" создан, но не удалось получить ID`);
   }
 
-  console.log(`[createServiceOrGetExisting] Создан новый сервис "${trimmedName}" с ID: ${data.id}`);
-  return data.id;
+  console.log(`[createServiceOrGetExisting] Создан новый сервис "${trimmedName}" с ID: ${createdService.id}`);
+  return createdService.id;
 }

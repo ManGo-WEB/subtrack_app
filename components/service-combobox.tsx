@@ -115,7 +115,7 @@ export function ServiceCombobox({
                 {searchQuery ? (
                   <div className="py-2 px-2">
                     <div className="text-sm text-muted-foreground mb-2">
-                      Сервис "{searchQuery}" не найден
+                      Сервис &quot;{searchQuery}&quot; не найден
                     </div>
                     {onCustomService && (
                       <Button
@@ -124,7 +124,7 @@ export function ServiceCombobox({
                         onClick={handleCustomCreate}
                         className="w-full"
                       >
-                        Создать "{searchQuery}"
+                        Создать &quot;{searchQuery}&quot;
                       </Button>
                     )}
                   </div>
