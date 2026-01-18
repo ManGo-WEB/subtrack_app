@@ -15,12 +15,12 @@ import {
 } from "@/app/actions/subscriptions";
 import { getExchangeRates } from "@/app/actions/exchange-rates";
 import { calculateMonthlyTotal } from "@/lib/utils/totals";
-import type { Subscription } from "@/types/subscription";
+import type { Subscription, SubscriptionWithService } from "@/types/subscription";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface DashboardClientProps {
-  subscriptions: Subscription[];
+  subscriptions: SubscriptionWithService[];
   monthlyTotal: number;
 }
 
@@ -190,6 +190,7 @@ export function DashboardClient({
               onEdit={handleEdit}
               onDelete={handleDelete}
               loading={isLoading}
+              serviceData={subscription.service}
             />
           ))}
         </div>

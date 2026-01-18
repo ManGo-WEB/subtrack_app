@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { Subscription } from "@/types/subscription";
+import type { ServiceCatalog } from "@/types/service";
 import { getNextPaymentDate, isPaymentDateNear } from "@/lib/utils/date";
 import { formatCurrency } from "@/lib/utils/currency";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ interface SubscriptionCardProps {
   onEdit: (subscription: Subscription) => void;
   onDelete: (id: string) => Promise<void>;
   loading?: boolean;
+  serviceData?: ServiceCatalog | null;
 }
 
 export function SubscriptionCard({
@@ -33,6 +35,7 @@ export function SubscriptionCard({
   onEdit,
   onDelete,
   loading = false,
+  serviceData = null,
 }: SubscriptionCardProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -78,28 +81,15 @@ export function SubscriptionCard({
       >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-lg text-white"
-                style={{
-                  backgroundColor:
-                    subscription.service_id === null
-                      ? "#64748b"
-                      : undefined,
-                }}
-              >
-                <CreditCard className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-lg">{subscription.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {formatCurrency(
-                    subscription.cost,
-                    subscription.currency,
-                    false
-                  )}
-                </p>
-              </div>
+            <div>
+              <h3 className="font-semibold text-lg">{subscription.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {formatCurrency(
+                  subscription.cost,
+                  subscription.currency,
+                  false
+                )}
+              </p>
             </div>
             <div className="flex gap-1">
               <Button

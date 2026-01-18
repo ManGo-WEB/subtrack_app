@@ -4,7 +4,7 @@ import { getSubscriptions } from "@/app/actions/subscriptions";
 import { getExchangeRates } from "@/app/actions/exchange-rates";
 import { calculateMonthlyTotal } from "@/lib/utils/totals";
 import { DashboardClient } from "@/components/dashboard-client";
-import type { Subscription } from "@/types/subscription";
+import type { Subscription, SubscriptionWithService } from "@/types/subscription";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardClient
-      subscriptions={subscriptions as Subscription[]}
+      subscriptions={subscriptions as SubscriptionWithService[]}
       monthlyTotal={monthlyTotal}
     />
   );

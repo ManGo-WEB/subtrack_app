@@ -6,12 +6,13 @@ import type {
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
   Subscription,
+  SubscriptionWithService,
 } from "@/types/subscription";
 
 /**
- * Получить все подписки текущего пользователя
+ * Получить все подписки текущего пользователя с данными сервисов
  */
-export async function getSubscriptions(): Promise<Subscription[]> {
+export async function getSubscriptions(): Promise<SubscriptionWithService[]> {
   const supabase = await createClient();
 
   const {
@@ -24,7 +25,16 @@ export async function getSubscriptions(): Promise<Subscription[]> {
 
   const { data, error } = await supabase
     .from("subscriptions")
-    .select("*")
+    .select(`
+      *,
+      services_catalog (
+        id,
+        name,
+        logo_url,
+        brand_color,
+        default_currency
+      )
+    `)
     .eq("user_id", user.id)
     .eq("active", true)
     .order("created_at", { ascending: false });
@@ -34,7 +44,20 @@ export async function getSubscriptions(): Promise<Subscription[]> {
     throw new Error("Не удалось получить подписки");
   }
 
-  return (data as Subscription[]) || [];
+  // Преобразуем данные Supabase в наш формат
+  // Supabase возвращает services_catalog как массив при JOIN
+  return (data || []).map((item: any) => {
+    const service = Array.isArray(item.services_catalog) 
+      ? (item.services_catalog[0] || null)
+      : (item.services_catalog || null);
+    
+    // Удаляем services_catalog из объекта, оставляем только service
+    const { services_catalog, ...subscription } = item;
+    return {
+      ...subscription,
+      service,
+    };
+  }) as SubscriptionWithService[];
 }
 
 /**
